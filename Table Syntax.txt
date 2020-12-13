@@ -1,0 +1,96 @@
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
+
+##Ambari MySql setup
+
+CREATE USER 'hive'@'%' IDENTIFIED BY 'hive';
+
+GRANT ALL PRIVILEGES ON *.* TO 'hive'@'%';
+
+CREATE USER 'hive'@'localhost' IDENTIFIED BY 'hive';
+
+GRANT ALL PRIVILEGES ON *.* TO 'hive'@'localhost';
+
+CREATE USER 'hive'@'worker2.us-east-2.compute.internal' IDENTIFIED BY 'hive';
+
+GRANT ALL PRIVILEGES ON *.* TO 'hive'@'worker2.us-east-2.compute.internal';
+
+m
+
+mysql -u ambari -p
+CREATE DATABASE ambari;
+USE ambari;
+SOURCE Ambari-DDL-MySQL-CREATE.sql;
+
+
+#!/bin/bash
+ 
+sudo apt-get update
+sudo apt-get upgrade -y
+
+sudo apt install ssh -y
+sudo apt install pdsh -y
+
+
+## Set replication factor on the HDFS directory, -R denotes recursively and -w followed by a number denotes the replication factor
+hdfs dfs -setrep -R -w 5 /usr/hive/warehouse
+
+## Create a Hive table in TEXTFILE format which will be stored in /usr/hive/warehouse
+CREATE EXTERNAL TABLE HTTP_LOGS_5GB(
+  CLIENT_IP STRING,
+  CLIENT_ID STRING,
+  USER_ID STRING,
+  REQUEST_RECEIVED_AT STRING,
+  CLIENT_REQUEST STRING,
+  STATUS_CODE STRING,
+  OBJECT_SIZE STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+WITH SERDEPROPERTIES (
+  "input.regex" = "([^ ]*) ([^ ]*) ([^ ]*) (-|\\[[^\\]]*\\]) ([^ \"]*|\"[^\"]*\") (-|[0-9]*) (-|[0-9]*)",
+  "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s"
+)
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH "/home/hadoop/dataset/NASA_access_log_5GB" INTO TABLE HTTP_LOGS_5GB;
+
+#Creating and Loading data into ORC table from intermediate Text table
+CREATE EXTERNAL TABLE HTTP_LOGS_ORC_1GB STORED AS ORC LOCATION '/usr/hive/warehouse/HTTP_LOGS_ORC_1GB' AS SELECT * FROM HTTP_LOGS_1GB;
+
+# Creating an ORC format TABLE, if a table is created using this query, loading data into it becomes difficult
+CREATE EXTERNAL TABLE HTTP_LOGS_ORC_1GB(
+  CLIENT_IP STRING,
+  CLIENT_ID STRING,
+  USER_ID STRING,
+  REQUEST_RECEIVED_AT STRING,
+  CLIENT_REQUEST STRING,
+  STATUS_CODE STRING,
+  OBJECT_SIZE STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+WITH SERDEPROPERTIES (
+  "input.regex" = "([^ ]*) ([^ ]*) ([^ ]*) (-|\\[[^\\]]*\\]) ([^ \"]*|\"[^\"]*\") (-|[0-9]*) (-|[0-9]*)",
+  "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s"
+)
+STORED AS ORC
+LOCATION '/usr/hive/warehouse/';
+
+#Creating and Loading data into ORC table from intermediate Text table
+CREATE EXTERNAL TABLE HTTP_LOGS_ORC_1GB STORED AS ORC LOCATION '/usr/hive/warehouse/HTTP_LOGS_ORC_1GB' AS SELECT * FROM HTTP_LOGS_1GB;
+
+INSERT INTO TABLE HTTP_LOGS_ORC_1GB SELECT * FROM HTTP_LOGS_1GB;
+
+CREATE TABLE access_logs(
+  host STRING,
+  identity STRING,
+  requser STRING,
+  reqtime STRING,
+  request STRING,
+  status STRING,
+  size STRING,
+  referer STRING,
+  agent STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+WITH SERDEPROPERTIES (
+  "input.regex" = "([^ ]*) ([^ ]*) ([^ ]*) (-|\\[[^\\]]*\\]) ([^ \"]*|\"[^\"]*\") (-|[0-9]*) (-|[0-9]*)(?: ([^ \"]*|\"[^\"]*\") ([^ \"]*|\"[^\"]*\"))?",
+  "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s %8$s %9$s"
+)
+STORED AS TEXTFILE;
+LOCATION '/logs/randomhacks.net/access';

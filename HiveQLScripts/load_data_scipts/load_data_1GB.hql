@@ -1,0 +1,1 @@
+LOAD DATA LOCAL INPATH "/home/hadoop/dataset/NASA_access_log_1GB" INTO TABLE HTTP_LOGS_1GB;
