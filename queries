@@ -13,50 +13,55 @@ Final set of Queries
 ---------------------------------------------
 
 #Query 1 : to find the total count of records
-SELECT COUNT(*) FROM http_logs;
+SELECT COUNT(*) FROM http_logs_1GB;
 
 #Query 2: to find the most frequently requested resource and their count in a descending order (LIMIT 10 shows top 10 results)
-SELECT client_request, COUNT(*) AS page_view_count FROM http_logs
+SELECT client_request, COUNT(*) AS page_view_count FROM http_logs_1GB
 GROUP BY client_request
 ORDER BY page_view_count DESC
 LIMIT 10;
 
 #Query 3: to Identify types of errors (error codes greater than 400 are errors) and their count
-SELECT status_code, count(status_code) AS distinct_status_codes FROM http_logs WHERE status_code >= '400'
+SELECT status_code, count(status_code) AS distinct_status_codes FROM http_logs_1GB WHERE status_code >= '400'
 GROUP BY status_code;
 
 #Query 4: to identify the requests for a resource that has returned majority of the errors
-SELECT client_request, COUNT(client_request) AS page_view_count FROM http_logs WHERE status_code >= '400'
+SELECT client_request, COUNT(client_request) AS page_view_count FROM http_logs_1GB WHERE status_code >= '400'
 GROUP BY client_request
 ORDER BY page_view_count ASC
 LIMIT 5;
 
 #Query 5: to identify the requests for a resource that has returned majority of the errors
-SELECT client_request, count(client_request) AS count_of_requests FROM http_logs WHERE status_code >= '400' 
+SELECT client_request, count(client_request) AS count_of_requests FROM http_logs_1GB WHERE status_code >= '400' 
 GROUP BY client_request 
 ORDER BY count_of_requests DESC 
 LIMIT 10;
 
 ---------------------------------------------
 
-
 ## ORC table queries
 
-#Query to find the total count of records
-SELECT COUNT(*) FROM http_orc;
+#Query 1 : to find the total count of records
+SELECT COUNT(*) FROM http_logs_orc;
 
-#Query to find the most frequently request resource and their count in a descending order (LIMIT 10 shows top 10 results)
-SELECT client_request, COUNT(*) AS page_view_count FROM http_orc
+#Query 2: to find the most frequently requested resource and their count in a descending order (LIMIT 10 shows top 10 results)
+SELECT client_request, COUNT(*) AS page_view_count FROM http_logs_orc_1GB
 GROUP BY client_request
 ORDER BY page_view_count DESC
 LIMIT 10;
 
-#Query to find the number of requests that returned an error response and corresponding HTTP status code
-SELECT count(client_request), status_code FROM http_orc
-WHERE status_code != 200
-GROUP BY status_code
-ORDER BY status_code DESC;
-
-#Query to Identify types of errors (error codes greater than 400 are errors) and their count
-SELECT status_code, count(status_code) AS distinct_status_codes FROM http_orc WHERE status_code >= '400'
+#Query 3: to Identify types of errors (error codes greater than 400 are errors) and their count
+SELECT status_code, count(status_code) AS distinct_status_codes FROM http_logs_orc_1GB WHERE status_code >= '400'
 GROUP BY status_code;
+
+#Query 4: to identify the requests for a resource that has returned majority of the errors
+SELECT client_request, COUNT(client_request) AS page_view_count FROM http_logs_orc_1GB WHERE status_code >= '400'
+GROUP BY client_request
+ORDER BY page_view_count ASC
+LIMIT 5;
+
+#Query 5: to identify the requests for a resource that has returned majority of the errors
+SELECT client_request, count(client_request) AS count_of_requests FROM http_logs_orc_1GB WHERE status_code >= '400' 
+GROUP BY client_request 
+ORDER BY count_of_requests DESC 
+LIMIT 10;

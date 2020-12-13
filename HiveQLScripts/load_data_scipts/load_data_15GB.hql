@@ -1,1 +1,1 @@
-LOAD DATA LOCAL INPATH "/home/hadoop/dataset/NASA_access_log_15GB" INTO TABLE HTTP_LOGS_15GB;
+LOAD DATA LOCAL INPATH "/usr/hive/warehouse/NASA_access_log_15GB" INTO TABLE HTTP_LOGS_15GB;
