@@ -1,9 +1,21 @@
-Total number of records in the 356MB file 3461612 (base file size)
+Total number of rows in the 356MB file 3461612 rows (base file size)
 
-Total number of records in the 1GB file 10384836
+Total number of rows in the 1GB file 10384836 rows
 
-Total number of records in the 5GB file 48462568
+Total number of rows in the 5GB file 48462568 rows
 
-Total number of records in the 10GB file 96925136
+Total number of rows in the 10GB file 96925136 rows
 
-Total number of records in the 15GB file 145387704
+Total number of rows in the 15GB file 145387704 rows
+
+CSV File Stats
+
+Total number of rows in the 307MB file 3461612 rows (base file size)
+
+Total number of rows in the 1GB file 13846448 rows
+
+Total number of rows in the 5GB file 58847404 rows
+
+Total number of rows in the 10GB file 114233196 rows
+
+Total number of rows in the 15GB file 173080600 rows

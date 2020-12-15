@@ -1,0 +1,19 @@
+hive> select count(*) from http_logs_csv_10gb;
+Query ID = hadoop_20201215230050_195c6fa2-f169-471d-9677-2255c154383d
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Job running in-process (local Hadoop)
+2020-12-15 23:00:51,864 Stage-1 map = 0%,  reduce = 0%
+Ended Job = job_local465715320_0003 with errors
+Error during job, obtaining debugging information...
+FAILED: Execution Error, return code 2 from org.apache.hadoop.hive.ql.exec.mr.MapRedTask
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 3862261640 HDFS Write: 0 FAIL
+Total MapReduce CPU Time Spent: 0 msec
