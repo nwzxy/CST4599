@@ -13,7 +13,7 @@ Final set of Queries
 ---------------------------------------------
 
 #Query 1: to find the total count of records
-SELECT COUNT(*) FROM http_logs_1GB;
+SELECT COUNT(*) FROM http_logs_csv_1GB;
 
 #Query 2: to find the most frequently requested resource and their count in a descending order (LIMIT 5 shows top 5 results)
 SELECT endpoint, COUNT(*) AS page_view_count FROM http_logs_csv_15gb
@@ -33,7 +33,7 @@ ORDER BY count_of_requests DESC
 LIMIT 5;
 
 #Query 5: find the resource, timestamp and size of a resource (in MB) that has been requested in descending order
-select distinct(endpoint), date_time, round((object_size * 0.000001)) as size_in_mb from http_logs_csv_1gb order by size_in_mb desc limit 20;
+SELECT DISTINCT(endpoint), date_time, ROUND((object_size * 0.000001)) AS size_in_mb FROM http_logs_csv_1gb ORDER BY size_in_mb desc LIMIT 20;
 
 
 ---------------------------------------------
@@ -61,7 +61,7 @@ ORDER BY count_of_requests DESC
 LIMIT 5;
 
 #Query 5:
-select distinct(endpoint), date_time, round((object_size * 0.000001)) as size_in_mb from http_logs_csv_orc_1gb order by size_in_mb desc limit 20;
+SELECT DISTINCT(endpoint), date_time, ROUND((object_size * 0.000001)) AS size_in_mb FROM http_logs_csv_orc_5gb ORDER BY size_in_mb desc LIMIT 20;
 
 ---------------------------------------------
 
