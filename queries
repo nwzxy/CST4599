@@ -68,7 +68,7 @@ SELECT DISTINCT(endpoint), date_time, ROUND((object_size * 0.000001)) AS size_in
 ## Parquet table queries
 
 #Query 1 : to find the total count of records
-SELECT COUNT(*) FROM http_logs_csv_prq_15GB;
+SELECT COUNT(*) FROM http_logs_csv_prq_1GB;
 
 #Query 2: to find the most frequently requested resource and their count in a descending order (LIMIT 5 shows top 5 results)
 SELECT endpoint, COUNT(*) AS page_view_count FROM http_logs_csv_prq_15gb
@@ -90,4 +90,4 @@ LIMIT 5;
 #Query 5:
 SELECT DISTINCT(endpoint), date_time, ROUND((object_size * 0.000001)) AS SIZE_IN_MB FROM http_logs_csv_prq_15gb 
 ORDER BY SIZE_IN_MB DESC 
-LIMIT 10;
+LIMIT 20;
